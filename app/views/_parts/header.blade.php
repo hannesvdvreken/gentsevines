@@ -16,7 +16,9 @@
     <script>
     	var base_url  = '{{ URL::to('/') }}';
     	var vine_base = '{{ Config::get('vine.base_url') }}';
+    	@if (isset($tag))
     	var tag       = '{{ $tag }}';
+    	@endif
     </script>
 </head>
 <body>
