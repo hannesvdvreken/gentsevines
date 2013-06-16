@@ -1,4 +1,5 @@
 /app/config/local/*
+/app/config/production/*
 /bootstrap/compiled.php
 /vendor
 /public/assets/css/.sass-cache
