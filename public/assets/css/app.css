@@ -1,0 +1,129 @@
+body, html {
+  font-family: "Source Sans Pro", sans-serif; }
+
+.first {
+  padding-top: 90px; }
+
+.toast-label {
+  width: 100%;
+  padding: 7px;
+  margin-bottom: 7px; }
+
+img.icon-vine {
+  display: inline-block;
+  height: 52.2px;
+  vertical-align: bottom;
+  padding-bottom: 13.34px;
+  margin: 0px; }
+
+/*
+ |---------------------------------------------------------------------
+ | navbar
+ |---------------------------------------------------------------------
+ */
+nav {
+  font-family: 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;
+  background-color: #00ac7f;
+  text-shadow: 0px 0px 6px #007e5d;
+  -webkit-box-shadow: 0 0px 3px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0 0px 3px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0px 3px 2px rgba(0, 0, 0, 0.4);
+  height: 58px;
+  /*
+  		*/ }
+  nav section.centered {
+    position: absolute;
+    width: 100%; }
+    nav section.centered a h1 {
+      font-size: 29px;
+      font-weight: 500;
+      margin: 0px;
+      line-height: 58px;
+      text-align: center;
+      color: #f3f3f3; }
+      nav section.centered a h1:hover {
+        color: #ebebeb;
+        background-color: #009d74; }
+  nav section.left {
+    position: absolute; }
+    nav section.left ul li {
+      display: inline-block; }
+    nav section.left ul li.active {
+      line-height: 58px;
+      background-color: #00ac7f;
+      border-right: 1px solid #00bb8a;
+      padding: 0px 34.8px;
+      color: #f3f3f3;
+      font-size: 17.4px; }
+      nav section.left ul li.active:hover {
+        color: #ebebeb;
+        background-color: #009d74; }
+      nav section.left ul li.active img.avatar {
+        width: 37px;
+        margin-right: 21px;
+        height: auto; }
+
+/*
+ |---------------------------------------------------------------------
+ | Vine
+ |---------------------------------------------------------------------
+ */
+#vines-container {
+  padding: 0px 14px; }
+  #vines-container .vine-element.row {
+    width: 100%;
+    margin: 0px 0px 30px 0px;
+    padding: 7px;
+    background-color: #f3f3f3;
+    border: 1px solid #ebebeb;
+    opacity: 0; }
+    #vines-container .vine-element.row .columns {
+      padding: 0px; }
+    #vines-container .vine-element.row .social .likes {
+      line-height: 34px;
+      font-size: 17px;
+      margin: 14px; }
+      #vines-container .vine-element.row .social .likes i {
+        cursor: pointer;
+        margin-right: 14px;
+        padding: 7px;
+        text-shadow: 1px 1px 4px #007e5d;
+        border: 1px solid #009d74;
+        color: white;
+        background-color: #00ac7f; }
+        #vines-container .vine-element.row .social .likes i:hover {
+          color: #f7f7f7;
+          background-color: #009d74; }
+      #vines-container .vine-element.row .social .likes i.liked {
+        color: #ff5949; }
+    #vines-container .vine-element.row .social .comments {
+      margin: 14px; }
+      #vines-container .vine-element.row .social .comments ul li {
+        display: block;
+        padding: 0px;
+        margin: 0px; }
+        #vines-container .vine-element.row .social .comments ul li img {
+          width: 34px;
+          height: auto;
+          margin-right: 14px; }
+        #vines-container .vine-element.row .social .comments ul li span.name, #vines-container .vine-element.row .social .comments ul li a.name {
+          font-weight: 600;
+          color: #00ac7f;
+          font-size: 17px;
+          margin-right: 7px; }
+        #vines-container .vine-element.row .social .comments ul li span.name:after {
+          font-weight: 300;
+          content: ':';
+          color: #222; }
+        #vines-container .vine-element.row .social .comments ul li a.name:after {
+          font-weight: 300;
+          content: ':';
+          color: #222; }
+
+/*
+ |
+ | Terms
+ |
+ */
+.terms p {
+  text-align: justify; }

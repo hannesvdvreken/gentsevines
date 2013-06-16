@@ -1,0 +1,213 @@
+$padding: 7px;
+$font-size: 17px;
+$nav-height: 58px;
+$vine-size: 480px;
+$vine-color: #00AC7F;
+$gray-bg: #F3F3F3;
+$error-color: #FF5949;
+
+body, html {
+	font-family: "Source Sans Pro", sans-serif;
+}
+
+.first {
+	padding-top: 90px;
+}
+
+.toast-label {
+	width: 100%;
+	padding: $padding;
+	margin-bottom: $padding;
+}
+
+img.icon-vine {
+	display: inline-block;
+	height: $nav-height * 0.90;
+	vertical-align: bottom;
+
+	padding-bottom: $nav-height * 0.23;
+	margin: 0px;
+}
+
+/*
+ |---------------------------------------------------------------------
+ | navbar
+ |---------------------------------------------------------------------
+ */
+
+nav {
+
+	font-family: 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;
+	background-color: $vine-color;
+
+	text-shadow: 0px 0px 6px darken($vine-color, 9%);
+
+	$blur: 3px;
+	$spread: 2px;
+	$alpha: 0.4;
+
+	-webkit-box-shadow: 0 0px $blur $spread rgba(0,0,0, 0.4);
+	   -moz-box-shadow: 0 0px $blur $spread rgba(0,0,0, 0.4);
+	        box-shadow: 0 0px $blur $spread rgba(0,0,0, 0.4);
+
+	height: $nav-height;
+
+	section.centered {
+		position: absolute;
+		width: 100%;
+
+		a {
+			h1 {
+				font-size: $nav-height * 0.50;
+				font-weight: 500;
+				margin: 0px;
+				line-height: $nav-height;
+				text-align: center;
+
+				color: $gray-bg;
+
+				&:hover {
+					color: darken($gray-bg, 3%);
+					background-color: darken($vine-color, 3%);
+				}
+			}
+		}
+	}
+
+	section.left {
+		position: absolute;
+		ul {
+			li {
+				display: inline-block;
+			}
+
+			li.active {
+
+				line-height: $nav-height;
+				background-color: $vine-color;
+				border-right: 1px solid lighten($vine-color, 3%);
+				padding: 0px $nav-height * 0.6;
+				color: $gray-bg;
+				font-size: $nav-height * 0.3;
+
+				&:hover {
+					color: darken($gray-bg, 3%);
+					background-color: darken($vine-color, 3%);
+				}
+
+				img.avatar {
+					width: $nav-height - 2 * 1.5 * $padding;
+					margin-right: $padding * 2 * 1.5;
+					height: auto;
+				}
+			}
+		}
+	}
+
+/*
+		*/
+}
+
+/*
+ |---------------------------------------------------------------------
+ | Vine
+ |---------------------------------------------------------------------
+ */
+
+#vines-container {
+
+	padding: 0px $padding * 2;
+
+	.vine-element.row {
+
+		width: 100%;
+		margin: 0px 0px 30px 0px;
+
+		padding: $padding;
+		
+		background-color: $gray-bg;
+		border: 1px solid darken($gray-bg, 3%);
+
+		opacity: 0;
+
+		.columns {
+			padding: 0px;
+		}
+
+		.social {
+
+			.likes {
+				line-height: $font-size * 2;
+				font-size: $font-size;
+				margin: $padding * 2;
+
+				i {
+					cursor: pointer;
+					margin-right: $padding * 2;
+					padding: $padding;
+					text-shadow: 1px 1px 4px darken($vine-color, 9%);
+					border: 1px solid darken($vine-color, 3%);
+					color: white;
+					background-color: $vine-color;
+
+					&:hover {
+						color: darken(#FFF, 3%);
+						background-color: darken($vine-color, 3%);
+					}
+				}
+
+				i.liked {
+					color: $error-color;
+				}
+			}
+
+			.comments {
+
+				margin: $padding * 2;
+
+				ul {
+					li {
+						display: block;
+						padding: 0px;
+						margin: 0px;
+
+						img {
+							width: $font-size * 2;
+							height: auto;
+							margin-right: $padding * 2;
+						}
+
+						span.name, a.name {
+							font-weight: 600;
+							color: $vine-color;
+							font-size: $font-size;
+							margin-right: $padding;
+						}
+
+						span.name:after {
+							font-weight: 300;
+							content: ':';
+							color: #222;
+						}
+
+						a.name:after {
+							font-weight: 300;
+							content: ':';
+							color: #222;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/*
+ |
+ | Terms
+ |
+ */
+
+.terms p {
+	text-align: justify;
+}

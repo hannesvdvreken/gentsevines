@@ -1,5 +1,7 @@
+/app/config/local/*
 /bootstrap/compiled.php
 /vendor
+/public/assets/css/.sass-cache
 composer.phar
 composer.lock
 .DS_Store

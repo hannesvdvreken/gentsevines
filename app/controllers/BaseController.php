@@ -7,12 +7,18 @@ class BaseController extends Controller {
 	 *
 	 * @return void
 	 */
-	protected function setupLayout()
+	protected function setupLayout ()
 	{
 		if ( ! is_null($this->layout))
 		{
 			$this->layout = View::make($this->layout);
 		}
 	}
+
+	public function __construct ()
+    {
+    	$this->curl = new Curl();
+    	$this->base = 'https://api.vineapp.com';
+    }
 
 }

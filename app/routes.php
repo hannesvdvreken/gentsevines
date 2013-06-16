@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+Route::controller('/login',  'LoginController' );
+Route::controller('/logout', 'LogoutController');
+Route::controller('/api',    'APIController'   );
+Route::controller('/',       'AppController'   );
