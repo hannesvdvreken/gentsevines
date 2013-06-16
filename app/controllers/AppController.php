@@ -88,7 +88,7 @@ class AppController extends BaseController {
 		else
 		{
 
-			return Response::make('unknown request', 404);
+			return Response::make('unknown request endpoint', 404);
 
 		}
 	}
