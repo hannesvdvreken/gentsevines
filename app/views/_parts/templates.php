@@ -22,7 +22,12 @@
 				</ul>
 			</div>
 			<div class="likes">
+				{{^likes.user_like }}
 				<i class="icon-heart"></i>
+				{{/likes.user_like }}
+				{{#likes.user_like }}
+				<i class="icon-heart liked"></i>
+				{{/likes.user_like }}
 				<span class="like-count">{{ likes.count }}</span> likes.
 			</div>
 		</div>

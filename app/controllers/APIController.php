@@ -20,6 +20,9 @@ class APIController extends BaseController {
 	 */
 	public function getLoad ($last_vine_id, $tag) {
 
+		$user = User::find(Session::get('user'));
+		$user_id = ($user) ? $user->id : null;
+
 		$last_vine = Vine::find($last_vine_id);
 
 		$set = Vine::where('tag', $tag)
@@ -29,7 +32,7 @@ class APIController extends BaseController {
 
 		foreach ($set as $v) {
 			// append like data
-			$v->likes = $this->likes($v);
+			$v->likes = $this->likes($v, $user_id);
 
 			// append user data
 			$v->user = $this->user($v);
@@ -49,10 +52,14 @@ class APIController extends BaseController {
 			return Response::make('we never heard about this vine...', 404);
 		}
 
+		// check if user is logged in
+		$user = User::find(Session::get('user'));
+		$user_id = ($user) ? $user->id : null;
+
 		switch ($type) {
 			case 'likes':
 
-				return Response::json($this->likes($vine));
+				return Response::json($this->likes($vine, $user_id));
 
 			case 'comments':
 
@@ -60,7 +67,7 @@ class APIController extends BaseController {
 
 			default:
 				// append like data
-				$vine->likes = $this->likes($vine);
+				$vine->likes = $this->likes($vine, $user_id);
 
 				// append user data
 				$vine->user = $this->user($vine);
@@ -114,7 +121,7 @@ class APIController extends BaseController {
 		return $user;
 	}
 
-	protected function likes ($vine) {
+	protected function likes ($vine, $user_id = null) {
 		// add caching
 
 		$vine_session_id = Config::get('vine.vine-session-id');
@@ -126,8 +133,28 @@ class APIController extends BaseController {
 		// pull data
 		$response = json_decode($this->curl->execute());
 
-		// return
-		return array('count' => $response->data->count);
+		// get count
+		$count = $response->data->count;
+
+		// get user
+
+		if (!$user_id) {
+
+			return compact('count');
+
+		} else {
+			$user_like = false;
+
+			foreach ($response->data->records as $like) {
+				if ($like->userId == $user_id)
+				{
+					$user_like = true;
+					break;
+				}
+			}
+
+			return compact('count', 'user_like');
+		}
 	}
 
 	protected function comments ($vine) {
