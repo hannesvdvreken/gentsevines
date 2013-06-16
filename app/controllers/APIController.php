@@ -7,8 +7,7 @@ class APIController extends BaseController {
 
 		$this->beforeFilter(function()
         {
-            if (App::environment() == 'production' &&
-            	!Session::has('user'))
+            if (!Session::has('user'))
             {
             	return Response::make('not authenticated', 401);
             }
@@ -94,12 +93,9 @@ class APIController extends BaseController {
 		// get user
 		$user = User::find(Session::get('user'));
 
-		// get token
-		$vine_session_id = Config::get('vine.vine-session-id');
-
 		// do request
 		$this->curl->create($this->base . "/posts/$vine_id/likes");
-		$this->curl->option(CURLOPT_HTTPHEADER, array("vine-session-id: {$vine_session_id}"));
+		$this->curl->option(CURLOPT_HTTPHEADER, array("vine-session-id: {$user->vine_session_id}"));
 		$this->curl->option(CURLOPT_CUSTOMREQUEST, $method);
 		
 		$response = json_decode($this->curl->execute());

@@ -19,6 +19,11 @@
     	@if (isset($tag))
     	var tag       = '{{ $tag }}';
     	@endif
+    	@if (isset($user))
+    	var logged_in = true;
+    	@else
+    	var logged_in = false;
+    	@endif
     </script>
 </head>
 <body>

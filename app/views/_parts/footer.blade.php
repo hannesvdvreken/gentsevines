@@ -1,6 +1,6 @@
 	<script src="{{ URL::to('/assets/js/vendor/zepto.js')}}"                     ></script>
 	<script src="{{ URL::to('/assets/js/foundation.min.js')}}"                   ></script>
-    <script src="{{ URL::to('/assets/js/app.js')}}"                              ></script>
+    <script src="{{ URL::to('/assets/js/app.js?v=2013061601')}}"                 ></script>
     @if (App::environment() == 'production')
     <script>
 	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

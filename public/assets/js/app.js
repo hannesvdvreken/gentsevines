@@ -192,6 +192,13 @@ function set_new_trigger() {
 
 function like(evt) {
 
+	// if not logged in, redirect
+	if (!logged_in) {
+		window.location.href = base_url + '/login/vine';
+		return false;
+	}
+
+	// if already liked; do dislike
 	if ($(evt.target).hasClass('liked')) return dislike(evt);
 
 	// get vine id out of dom
@@ -200,6 +207,7 @@ function like(evt) {
 	// build url
 	url = base_url + '/api/like/' + vine_id;
 
+	// make post
 	$.post(url, function(data) {
 
 		if (data.success) {
