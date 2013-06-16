@@ -32,11 +32,13 @@
 			</div>
 		</div>
 		<div class="large-6 columns">
-			<img src="{{ thumbnail }}" onclick="javascript: start_vine(this);"/>
+			<video src="{{ video }}" class="paused" loop>
+				<img src="{{ thumbnail }}" />
+			</video>
 		</div>
 	</div>
 </script>
 
 <script id="vine_video" type="text/html">
-	<video src="{{ video }}" autoplay loop/>
+	
 </script>

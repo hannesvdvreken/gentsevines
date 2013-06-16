@@ -2,36 +2,94 @@
 
 class AppController extends BaseController {
 
+	public function __construct() {
+
+		parent::__construct();
+
+		$this->user = null;
+
+		// get logged in user
+		if (Session::has('user')) {
+
+			$this->user = User::find(Session::get('user'));
+
+		}
+	}
+
 	/**
 	 *
 	 */
-	public function getIndex () {
+	public function getIndex ($vine_id = null) {
+
+		if ($vine_id)
+		{
+			return $this->one_vine($vine_id);
+		}
+		else
+		{
+			return $this->all_vines();
+		}
+		
+	}
+
+	public function getTerms () {
+
+		$user = $this->user;
+
+		return View::make('terms', compact('user'));
+
+	}
+
+	protected function one_vine($vine_id) {
+
+		$user = $this->user;
+
+		$exists = Vine::where('id', $vine_id)->count();
+
+		if ($exists) 
+		{
+			return View::make('vine', compact('vine_id'));
+		}
+		else 
+		{
+			return Response::make('doesn\'t ring a bell...', 404);
+		}
+
+	}
+
+	protected function all_vines() {
+
 		$tag = Config::get('vine.default-tag');
 
 		// get vines
 		$set = Vine::where('tag', $tag)->orderBy('posted_at', 'desc')->take(5)->get();
 
 		$vines = array();
+
 		foreach ($set as $v) {
+
 			$vines[] = $v->id;
+
 		}
 
 		// get logged in user
-		if (Session::has('user')) {
-			$user = User::find(Session::get('user'));
-		}
+		$user = $this->user;
 		
 		return View::make('index', compact('vines', 'user', 'tag'));
 	}
 
-	public function getTerms () {
+	public function missingMethod( $args ) {
 
-		// get logged in user
-		if (Session::has('user')) {
-			$user = User::find(Session::get('user'));
+		if (count($args) == 1) {
+
+			return $this->one_vine(reset($args));
+
 		}
+		else
+		{
 
-		return View::make('terms', compact('user'));
+			return Response::make('unknown request', 404);
 
+		}
 	}
 }

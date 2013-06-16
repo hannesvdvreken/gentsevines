@@ -52,7 +52,7 @@ function init_display_vines () {
 
 	if (typeof(vines) == 'undefined') return false;
 
-	if (vines.length == 0)
+	if (vines.length == 0 )
 	{
 		// set trigger for loading new vines
 		set_new_trigger();
@@ -85,6 +85,9 @@ function show_vine (vine_data) {
 	// apply event listeners
 	$('.icon-heart').unbind('click'); // don't bind several times
 	$('.icon-heart').on('click', like);
+
+	$('video').unbind('click'); // don't bind several times
+	$('video').on('click', start_vine);
 
 	// fade in
 	$('.vine-element').animate({'opacity': 1}, 600);
@@ -128,33 +131,25 @@ function load_vines (el) {
 	})
 }
 
-function start_vine (el) 
+function start_vine (evt) 
 {
-	// get surrounding div
-	div = $(el).closest('.vine-element');
+	video = evt.target;
+	paused_classname = 'paused';
 
-	// get video url
-	video = div.data('video');
+	if ($(video).hasClass(paused_classname))
+	{
+		// all other videos must be paused first
+		$('video').each( function() { this.pause(); });
+		$('video').addClass(paused_classname);
 
-	// substitute thumbnail img for video
-	p = $(el).parent();
-	$(el).remove();
-	p.append(ich.vine_video({"video": video}));
+		// now start playing
+		video.play();
+		$(video).removeClass(paused_classname);
 
-	$('video').unbind('click'); // don't bind several times
-	$('video').on('click', function(evt) {
-
-		video = evt.target;
-
-		if ($(video).hasClass('paused'))
-		{
-			video.play();
-			$(video).removeClass('paused');
-		} else {
-			video.pause();
-			$(video).addClass('paused');
-		}
-	});
+	} else {
+		video.pause();
+		$(video).addClass(paused_classname);
+	}
 }
 
 /*
@@ -164,6 +159,8 @@ function start_vine (el)
  */
 
 function set_new_trigger() {
+
+	if (static_page) return false;
 
 	// variables
 	classname = 'trigger';
