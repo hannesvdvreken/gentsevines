@@ -76,9 +76,12 @@ function init_display_vines () {
 
 function show_vine (vine_data) {
 
+	// add some data (icanhaz is not that good)
 	vine_data.description_esc = encodeURIComponent(vine_data.description);
 	vine_data.user.username_esc = encodeURIComponent(vine_data.user.username);
-
+	vine_data.base_url = base_url;
+	vine_data.static_page = (typeof(static_page) != 'undefined' && static_page);
+	
 	// render
 	html = ich.vine(vine_data);
 

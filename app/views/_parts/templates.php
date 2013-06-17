@@ -23,7 +23,7 @@
 			</div>
 			<div class="likes">
 				{{^likes.user_like }}
-				<i class="icon-heart"></i>
+				<span class="btn"><i class="icon-heart"></i></span>
 				{{/likes.user_like }}
 				{{#likes.user_like }}
 				<i class="icon-heart liked"></i>
@@ -34,21 +34,25 @@
 				<a href="https://twitter.com/intent/tweet?hashtags=gf13&original_referer=http%3A%2F%2Fgentsevines.be%2F&related=hannesvdvreken&text=%3C3%20Gent&url=http%3A%2F%2Fgentsevines.be%2F{{id}}"
 				   target="_blank"
 				>
-					Tweet
+					<span class="btn"><i class="icon-twitter"></i></span>
 				</a>
-				<br />
 				<a href="https://www.facebook.com/dialog/feed?
 	app_id=183832018447263&
-	link=http://gentsevines.be/{{ id }}&
+	link={{ base_url }}/{{ id }}&
 	picture={{ thumbnail }}&
 	name=Gentse+Vines&
 	caption={{ user.username_esc }}&
 	description={{ description_esc }}&
-	redirect_uri=http://gentsevines.be/{{ id }}"
+	redirect_uri={{ base_url }}/{{ id }}"
     			   target="_blank"
     			>
-					Delen op Facebook
+					<span class="btn"><i class="icon-facebook"></i></span>
 				</a>
+				{{^static_page}}
+				<a href="{{ base_url }}/{{ id }}">
+					<span class="btn"><i class="icon-ellipsis-horizontal"></i></span>
+				</a>
+				{{/static_page}}
 			</div>
 		</div>
 		<div class="large-6 columns">

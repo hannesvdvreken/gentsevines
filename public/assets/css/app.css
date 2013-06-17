@@ -1,3 +1,13 @@
+/*
+ |---------------------------------------------------------------------
+ | Mixins
+ |---------------------------------------------------------------------
+ */
+/*
+ |---------------------------------------------------------------------
+ | Default tags
+ |---------------------------------------------------------------------
+ */
 body, html {
   font-family: "Source Sans Pro", sans-serif; }
 
@@ -31,9 +41,7 @@ nav {
   -webkit-box-shadow: 0 0px 3px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 0 0px 3px 2px rgba(0, 0, 0, 0.4);
   box-shadow: 0 0px 3px 2px rgba(0, 0, 0, 0.4);
-  height: 58px;
-  /*
-  		*/ }
+  height: 58px; }
   nav section.centered {
     position: absolute;
     width: 100%; }
@@ -74,6 +82,7 @@ nav {
 #vines-container {
   padding: 0px 14px; }
   #vines-container .vine-element.row {
+    position: relative;
     width: 100%;
     margin: 0px 0px 30px 0px;
     background-color: #f3f3f3;
@@ -85,6 +94,25 @@ nav {
       padding: 21px; }
       #vines-container .vine-element.row .social div {
         margin-bottom: 14px; }
+        #vines-container .vine-element.row .social div span.btn {
+          display: block;
+          float: left;
+          width: 34px;
+          height: 34px;
+          margin-right: 14px;
+          border: 1px solid #009d74;
+          color: white;
+          background-color: #00ac7f;
+          text-align: center;
+          vertical-align: baseline; }
+          #vines-container .vine-element.row .social div span.btn:hover {
+            color: #f7f7f7;
+            background-color: #009d74; }
+        #vines-container .vine-element.row .social div i {
+          text-shadow: 1px 1px 4px #007e5d;
+          margin: 0px;
+          padding: 0px;
+          line-height: 34px; }
       #vines-container .vine-element.row .social .comments ul {
         margin: 0px; }
         #vines-container .vine-element.row .social .comments ul li {
@@ -111,22 +139,16 @@ nav {
       #vines-container .vine-element.row .social .likes {
         line-height: 34px;
         font-size: 17px; }
-        #vines-container .vine-element.row .social .likes i {
-          cursor: pointer;
-          margin-right: 14px;
-          padding: 7px;
-          text-shadow: 1px 1px 4px #007e5d;
-          border: 1px solid #009d74;
-          color: white;
-          background-color: #00ac7f; }
-          #vines-container .vine-element.row .social .likes i:hover {
-            color: #f7f7f7;
-            background-color: #009d74; }
         #vines-container .vine-element.row .social .likes i.liked {
           color: #ff5949; }
-      #vines-container .vine-element.row .social .share a {
-        line-height: 25.5px;
-        margin: 7px 0px; }
+      #vines-container .vine-element.row .social .share {
+        position: absolute;
+        top: 90%; }
+        #vines-container .vine-element.row .social .share a {
+          line-height: 25.5px;
+          margin: 7px 0px; }
+          #vines-container .vine-element.row .social .share a i {
+            display: inline-block; }
 
 /*
  |---------------------------------------------------------------------

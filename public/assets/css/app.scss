@@ -6,6 +6,27 @@ $vine-color: #00AC7F;
 $gray-bg: #F3F3F3;
 $error-color: #FF5949;
 
+/*
+ |---------------------------------------------------------------------
+ | Mixins
+ |---------------------------------------------------------------------
+ */
+
+@mixin rotate($deg) {
+	-webkit-transform: rotate($deg);	
+	-moz-transform: rotate($deg);
+	-ms-transform: rotate($deg);
+	-o-transform: rotate($deg);
+	transform: rotate($deg);
+}
+
+/*
+ |---------------------------------------------------------------------
+ | Default tags
+ |---------------------------------------------------------------------
+ */
+
+
 body, html {
 	font-family: "Source Sans Pro", sans-serif;
 }
@@ -109,9 +130,6 @@ nav {
 			}
 		}
 	}
-
-/*
-		*/
 }
 
 /*
@@ -125,6 +143,7 @@ nav {
 	padding: 0px $padding * 2;
 
 	.vine-element.row {
+		position: relative;
 
 		width: 100%;
 		margin: 0px 0px 30px 0px;
@@ -144,6 +163,36 @@ nav {
 
 			div {
 				margin-bottom: $padding * 2;
+
+				span.btn {
+					display: block;
+					float: left;
+
+					width: $font-size * 2;
+					height: $font-size * 2;
+
+					margin-right: $padding * 2;
+
+					border: 1px solid darken($vine-color, 3%);
+					color: white;
+					background-color: $vine-color;
+
+					&:hover {
+						color: darken(#FFF, 3%);
+						background-color: darken($vine-color, 3%);
+					}
+
+					text-align: center;
+					vertical-align: baseline;
+				}
+
+				i {
+					text-shadow: 1px 1px 4px darken($vine-color, 9%);
+					margin: 0px;
+					padding: 0px;
+
+					line-height: $font-size * 2;
+				}
 			}
 
 			.comments {
@@ -188,30 +237,22 @@ nav {
 				line-height: $font-size * 2;
 				font-size: $font-size;
 
-				i {
-					cursor: pointer;
-					margin-right: $padding * 2;
-					padding: $padding;
-					text-shadow: 1px 1px 4px darken($vine-color, 9%);
-					border: 1px solid darken($vine-color, 3%);
-					color: white;
-					background-color: $vine-color;
-
-					&:hover {
-						color: darken(#FFF, 3%);
-						background-color: darken($vine-color, 3%);
-					}
-				}
-
 				i.liked {
 					color: $error-color;
 				}
 			}
 
 			.share {
+				position: absolute;
+				top: 90%;
+
 				a {
 					line-height: $font-size * 1.5;
 					margin: $padding 0px;
+
+					i {
+						display: inline-block;
+					}
 				}
 			}
 		}
