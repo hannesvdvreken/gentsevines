@@ -111,6 +111,7 @@ class PullCommand extends Command {
 			$id       = $user_data->userId;
 			$username = $user_data->username;
 			$avatar   = $user_data->avatarUrl;
+			$location = isset($user_data->location) ? $user_data->location : null;
 
 			// don't duplicate
 			$user = User::find($id);
@@ -125,7 +126,7 @@ class PullCommand extends Command {
 			else
 			{
 				// create
-				User::create(compact('id', 'avatar', 'username'));
+				User::create(compact('id', 'avatar', 'username', 'location'));
 			}
 		}
 	}

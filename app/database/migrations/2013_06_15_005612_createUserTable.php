@@ -24,6 +24,7 @@ class CreateUserTable extends Migration {
 			$table->string('avatar');
 			$table->string('username');
 			$table->string('twitter')->nullable();
+			$table->string('location')->nullable();
 		});
 	}
 
