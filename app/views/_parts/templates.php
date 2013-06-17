@@ -30,6 +30,26 @@
 				{{/likes.user_like }}
 				<span class="like-count">{{ likes.count }}</span> likes.
 			</div>
+			<div class="share">
+				<a href="https://twitter.com/intent/tweet?hashtags=gf13&original_referer=http%3A%2F%2Fgentsevines.be%2F&related=hannesvdvreken&text=%3C3%20Gent&url=http%3A%2F%2Fgentsevines.be%2F{{id}}"
+				   target="_blank"
+				>
+					Tweet
+				</a>
+				<br />
+				<a href="https://www.facebook.com/dialog/feed?
+	app_id=183832018447263&
+	link=http://gentsevines.be/{{ id }}&
+	picture={{ thumbnail }}&
+	name=Gentse+Vines&
+	caption={{ user.username_esc }}&
+	description={{ description_esc }}&
+	redirect_uri=http://gentsevines.be/{{ id }}"
+    			   target="_blank"
+    			>
+					Delen op Facebook
+				</a>
+			</div>
 		</div>
 		<div class="large-6 columns">
 			<video src="{{ video }}" class="paused" loop>

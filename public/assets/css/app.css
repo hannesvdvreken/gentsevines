@@ -16,6 +16,9 @@ img.icon-vine {
   padding-bottom: 13.34px;
   margin: 0px; }
 
+.text-center h1 {
+  text-align: left; }
+
 /*
  |---------------------------------------------------------------------
  | navbar
@@ -73,57 +76,62 @@ nav {
   #vines-container .vine-element.row {
     width: 100%;
     margin: 0px 0px 30px 0px;
-    padding: 7px;
     background-color: #f3f3f3;
     border: 1px solid #ebebeb;
     opacity: 0; }
     #vines-container .vine-element.row .columns {
-      padding: 0px; }
-    #vines-container .vine-element.row .social .likes {
-      line-height: 34px;
-      font-size: 17px;
-      margin: 14px; }
-      #vines-container .vine-element.row .social .likes i {
-        cursor: pointer;
-        margin-right: 14px;
-        padding: 7px;
-        text-shadow: 1px 1px 4px #007e5d;
-        border: 1px solid #009d74;
-        color: white;
-        background-color: #00ac7f; }
-        #vines-container .vine-element.row .social .likes i:hover {
-          color: #f7f7f7;
-          background-color: #009d74; }
-      #vines-container .vine-element.row .social .likes i.liked {
-        color: #ff5949; }
-    #vines-container .vine-element.row .social .comments {
-      margin: 14px; }
-      #vines-container .vine-element.row .social .comments ul li {
-        display: block;
-        padding: 0px;
+      padding: 7px 7px 7px 0px; }
+    #vines-container .vine-element.row .social {
+      padding: 21px; }
+      #vines-container .vine-element.row .social div {
+        margin-bottom: 14px; }
+      #vines-container .vine-element.row .social .comments ul {
         margin: 0px; }
-        #vines-container .vine-element.row .social .comments ul li img {
-          width: 34px;
-          height: auto;
-          margin-right: 14px; }
-        #vines-container .vine-element.row .social .comments ul li span.name, #vines-container .vine-element.row .social .comments ul li a.name {
-          font-weight: 600;
-          color: #00ac7f;
-          font-size: 17px;
-          margin-right: 7px; }
-        #vines-container .vine-element.row .social .comments ul li span.name:after {
-          font-weight: 300;
-          content: ':';
-          color: #222; }
-        #vines-container .vine-element.row .social .comments ul li a.name:after {
-          font-weight: 300;
-          content: ':';
-          color: #222; }
+        #vines-container .vine-element.row .social .comments ul li {
+          display: block;
+          padding: 0px;
+          margin: 0px; }
+          #vines-container .vine-element.row .social .comments ul li img {
+            width: 34px;
+            height: auto;
+            margin-right: 14px; }
+          #vines-container .vine-element.row .social .comments ul li span.name, #vines-container .vine-element.row .social .comments ul li a.name {
+            font-weight: 600;
+            color: #00ac7f;
+            font-size: 17px;
+            margin-right: 7px; }
+          #vines-container .vine-element.row .social .comments ul li span.name:after {
+            font-weight: 300;
+            content: ':';
+            color: #222; }
+          #vines-container .vine-element.row .social .comments ul li a.name:after {
+            font-weight: 300;
+            content: ':';
+            color: #222; }
+      #vines-container .vine-element.row .social .likes {
+        line-height: 34px;
+        font-size: 17px; }
+        #vines-container .vine-element.row .social .likes i {
+          cursor: pointer;
+          margin-right: 14px;
+          padding: 7px;
+          text-shadow: 1px 1px 4px #007e5d;
+          border: 1px solid #009d74;
+          color: white;
+          background-color: #00ac7f; }
+          #vines-container .vine-element.row .social .likes i:hover {
+            color: #f7f7f7;
+            background-color: #009d74; }
+        #vines-container .vine-element.row .social .likes i.liked {
+          color: #ff5949; }
+      #vines-container .vine-element.row .social .share a {
+        line-height: 25.5px;
+        margin: 7px 0px; }
 
 /*
- |
+ |---------------------------------------------------------------------
  | Terms
- |
+ |---------------------------------------------------------------------
  */
 .terms p {
   text-align: justify; }

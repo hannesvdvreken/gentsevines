@@ -29,6 +29,12 @@ img.icon-vine {
 	margin: 0px;
 }
 
+.text-center {
+	h1 {
+		text-align: left;
+	}
+}
+
 /*
  |---------------------------------------------------------------------
  | navbar
@@ -122,8 +128,6 @@ nav {
 
 		width: 100%;
 		margin: 0px 0px 30px 0px;
-
-		padding: $padding;
 		
 		background-color: $gray-bg;
 		border: 1px solid darken($gray-bg, 3%);
@@ -131,41 +135,22 @@ nav {
 		opacity: 0;
 
 		.columns {
-			padding: 0px;
+			padding: $padding $padding $padding 0px;
 		}
 
 		.social {
 
-			.likes {
-				line-height: $font-size * 2;
-				font-size: $font-size;
-				margin: $padding * 2;
+			padding: $padding * 3;
 
-				i {
-					cursor: pointer;
-					margin-right: $padding * 2;
-					padding: $padding;
-					text-shadow: 1px 1px 4px darken($vine-color, 9%);
-					border: 1px solid darken($vine-color, 3%);
-					color: white;
-					background-color: $vine-color;
-
-					&:hover {
-						color: darken(#FFF, 3%);
-						background-color: darken($vine-color, 3%);
-					}
-				}
-
-				i.liked {
-					color: $error-color;
-				}
+			div {
+				margin-bottom: $padding * 2;
 			}
 
 			.comments {
 
-				margin: $padding * 2;
-
 				ul {
+					margin: 0px;
+
 					li {
 						display: block;
 						padding: 0px;
@@ -198,14 +183,45 @@ nav {
 					}
 				}
 			}
+
+			.likes {
+				line-height: $font-size * 2;
+				font-size: $font-size;
+
+				i {
+					cursor: pointer;
+					margin-right: $padding * 2;
+					padding: $padding;
+					text-shadow: 1px 1px 4px darken($vine-color, 9%);
+					border: 1px solid darken($vine-color, 3%);
+					color: white;
+					background-color: $vine-color;
+
+					&:hover {
+						color: darken(#FFF, 3%);
+						background-color: darken($vine-color, 3%);
+					}
+				}
+
+				i.liked {
+					color: $error-color;
+				}
+			}
+
+			.share {
+				a {
+					line-height: $font-size * 1.5;
+					margin: $padding 0px;
+				}
+			}
 		}
 	}
 }
 
 /*
- |
+ |---------------------------------------------------------------------
  | Terms
- |
+ |---------------------------------------------------------------------
  */
 
 .terms p {

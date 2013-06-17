@@ -1,21 +1,18 @@
 @include('_parts.header')
 
 	<div class="row first">
-		<div class="large-12 columns text-center">
+		<div class="large-8 large-centered columns">
 			<h1>
 				login 
+			</h1>
+			<h2>
 				<small>
 					gebruik je e-mailadres en wachtwoord van 
 					<a href="https://vine.co" target="_blank">
 						vine.co
 					</a>
 				</small>
-			</h1>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="large-8 large-centered columns">
+			</h2>
 			<form method="POST">
 				@if (isset($message))
 					<span class="alert label toast-label">{{ $message }}</span>

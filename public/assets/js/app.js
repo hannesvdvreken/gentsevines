@@ -76,6 +76,9 @@ function init_display_vines () {
 
 function show_vine (vine_data) {
 
+	vine_data.description_esc = encodeURIComponent(vine_data.description);
+	vine_data.user.username_esc = encodeURIComponent(vine_data.user.username);
+
 	// render
 	html = ich.vine(vine_data);
 
@@ -160,7 +163,7 @@ function start_vine (evt)
 
 function set_new_trigger() {
 
-	if (static_page) return false;
+	if (typeof(static_page) != 'undefined' && static_page) return false;
 
 	// variables
 	classname = 'trigger';
