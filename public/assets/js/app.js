@@ -112,7 +112,7 @@ function load_vines (el) {
 	last_vine_id = $(last).attr('data-id');
 
 	// pull new
-	url = base_url + '/api/load/' + last_vine_id + '/' + tag;
+	url = base_url + '/api/load/' + last_vine_id + '/' + tags.join('+');
 
 	$.get(url, function(data) {
 

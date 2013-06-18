@@ -59,10 +59,10 @@ class AppController extends BaseController {
 
 	protected function all_vines() {
 
-		$tag = Config::get('vine.default-tag');
+		$tags = Config::get('vine.tags');
 
 		// get vines
-		$set = Vine::where('tag', $tag)->orderBy('posted_at', 'desc')->take(5)->get();
+		$set = Vine::whereIn('tag', $tags)->orderBy('posted_at', 'desc')->take(5)->get();
 
 		$vines = array();
 
@@ -75,7 +75,7 @@ class AppController extends BaseController {
 		// get logged in user
 		$user = $this->user;
 		
-		return View::make('index', compact('vines', 'user', 'tag'));
+		return View::make('index', compact('vines', 'user', 'tags'));
 	}
 
 	public function missingMethod( $args ) {

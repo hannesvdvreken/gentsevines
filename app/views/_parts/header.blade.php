@@ -28,8 +28,8 @@
 	<script>
     	var base_url  = '{{ URL::to('/') }}';
     	var vine_base = '{{ Config::get('vine.base_url') }}';
-    	@if (isset($tag))
-    	var tag       = '{{ $tag }}';
+    	@if (isset($tags))
+    	var tags       = {{ json_encode($tags) }};
     	@endif
     	@if (isset($user))
     	var logged_in = true;

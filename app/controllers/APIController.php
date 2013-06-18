@@ -18,14 +18,16 @@ class APIController extends BaseController {
 	/**
 	 *
 	 */
-	public function getLoad ($last_vine_id, $tag) {
+	public function getLoad ($last_vine_id, $tags) {
+
+		$tags = explode('+', $tags);
 
 		$user = User::find(Session::get('user'));
 		$user_id = ($user) ? $user->id : null;
 
 		$last_vine = Vine::find($last_vine_id);
 
-		$set = Vine::where('tag', $tag)
+		$set = Vine::whereIn('tag', $tags)
 		           ->where('posted_at', '<', $last_vine->posted_at)
 		           ->orderBy('posted_at', 'desc')
 		           ->take(1)->get();
