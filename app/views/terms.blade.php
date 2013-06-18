@@ -27,6 +27,8 @@
 			</p><p>
 				Gebruikte hulpmiddelen bij het creëren van <a href="http://gentsevines.be">gentsevines.be</a>: <a href="http://nginx.com/" target="_blank">Nginx</a>, <a href="http://php.net/" target="_blank">PHP</a>, <a href="http://git-scm.com/" target="_blank">Git</a>, <a href="http://sass-lang.com/" target="_blank">Sass</a>, <a href="http://www.css3.info/" target="_blank">CSS3</a>, <a href="http://dev.w3.org/html5/spec/" target="_blank">HTML5</a>, <a href="http://zeptojs.com/" target="_blank">Zepto.js</a> (performante replacement voor JQuery), <a href="http://foundation.zurb.com/" target="_blank">Foundation 4</a>, <a href="http://laravel.com/" target="_blank">Laravel 4</a>, <a href="http://fortawesome.github.io/Font-Awesome/" target="_blank">Fontawesome</a> en <a href="http://icanhazjs.com/" target="_blank">Icanhaz.js</a>.
 			</p>
+			<h2>Contact</h2>
+			<p>Contact opnemen? Via <a href="mailto:vandevreken.hannes+gv@gmail.com">mail</a> of <a href="https://twitter.com/hannesvdvreken">twitter</a></p>
 		</div>
 	</div>
 

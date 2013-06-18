@@ -41,13 +41,37 @@ class PullCommand extends Command {
 	public function fire()
 	{
 		// TODO get tag from arguments list
-		$tag = $this->argument('tag');
+		$tags = array();
+		$tag = $this->option('tag');
+
+		if ($tag) {
+			$tags[] = $tag;
+		}
+		else
+		{
+			$tags = Config::get('vine.tags');
+		}
+
+		foreach ($tags as $tag) {
+
+			$vines = $this->pull_vines($tag);
+		
+			foreach ($vines as $vine_data) {
+			
+				$this->save_vine($vine_data, $tag);
+		
+			}
+
+		}
+	}
+
+	function pull_vines ($tag) {
 
 		// get settings
 		$vine_session_id = Config::get('vine.vine-session-id');
 
 		// init
-		$this->curl->create($this->base . "/timelines/tags/$tag?size=1");
+		$this->curl->create($this->base . "/timelines/tags/$tag?size=10");
 		$this->curl->option(CURLOPT_HTTPHEADER, array("vine-session-id: $vine_session_id"));
 
 		// do request
@@ -55,6 +79,11 @@ class PullCommand extends Command {
 
 		// prepare array
 		$vines = array();
+
+		if (count($response->data->records) == 0 )
+		{
+			return $vines;
+		}
 
 		// try existance
 		$id = $response->data->records[0]->postId;
@@ -64,12 +93,21 @@ class PullCommand extends Command {
 		$page   = $response->data->nextPage;
 		$anchor = $response->data->anchor;
 
-		while (!$vine && !is_null($page)) {
-			// add to array
-			$vines[] = $response->data->records[0];
+		foreach ($response->data->records as $record) {
+			// try existance
+			$id = $record->postId;
+			$vine = Vine::where('id', $id)->first();
+
+			if (!$vine) 
+			{
+				$vines[] = $record;
+			}
+		}
+
+		while (!is_null($page)) {
 
 			// prep curl
-			$this->curl->create($this->base . "/timelines/tags/$tag?size=1&page=$page&anchor=$anchor");
+			$this->curl->create($this->base . "/timelines/tags/$tag?size=10&page=$page&anchor=$anchor");
 			$this->curl->option(CURLOPT_HTTPHEADER, array("vine-session-id: $vine_session_id"));
 
 			// exec
@@ -81,53 +119,62 @@ class PullCommand extends Command {
 				break;
 			}
 
-			// try existance
-			$id = $response->data->records[0]->postId;
-			$vine = Vine::where('id', $id)->where('tag', $tag)->first();
-
 			// repeat
 			$page   = $response->data->nextPage;
 			$anchor = $response->data->anchor;
 
+			foreach ($response->data->records as $record) {
+				// try existance
+				$id = $record->postId;
+				$vine = Vine::where('id', $id)->first();
+
+				if (!$vine) 
+				{
+					$vines[] = $record;
+				}
+			}
 		}
 
-		foreach ($vines as $vine_data) {
-			
-			// get required vine data
-			$id          = $vine_data->postId;
-			$venue       = $vine_data->foursquareVenueId;
-			$user_id     = $vine_data->user->userId;
-			$thumbnail   = $vine_data->thumbnailUrl;
-			$description = $vine_data->description;
-			$video       = $vine_data->videoUrl;
-			$posted_at   = $vine_data->created;
+		// return
+		return $vines;
+	}
 
-			// save vine
-			Vine::create(compact('id', 'venue', 'user_id', 'thumbnail', 'description', 'video', 'posted_at', 'tag'));
+	function save_vine ($vine_data, $tag) {
 
-			// get user data
-			$user_data = $vine_data->user;
+		// get required vine data
+		$id          = $vine_data->postId;
+		$venue       = $vine_data->foursquareVenueId;
+		$user_id     = $vine_data->user->userId;
+		$thumbnail   = $vine_data->thumbnailUrl;
+		$description = $vine_data->description;
+		$video       = $vine_data->videoUrl;
+		$posted_at   = $vine_data->created;
 
-			$id       = $user_data->userId;
-			$username = $user_data->username;
-			$avatar   = $user_data->avatarUrl;
-			$location = isset($user_data->location) ? $user_data->location : null;
+		// save vine
+		Vine::create(compact('id', 'venue', 'user_id', 'thumbnail', 'description', 'video', 'posted_at', 'tag'));
 
-			// don't duplicate
-			$user = User::find($id);
+		// get user data
+		$user_data = $vine_data->user;
 
-			if ($user) {
-				// update
-				$user->username = $username;
-				$user->avatar   = $avatar;
+		$id       = $user_data->userId;
+		$username = $user_data->username;
+		$avatar   = $user_data->avatarUrl;
+		$location = isset($user_data->location) ? $user_data->location : null;
 
-				$user->save();
-			}
-			else
-			{
-				// create
-				User::create(compact('id', 'avatar', 'username', 'location'));
-			}
+		// don't duplicate
+		$user = User::find($id);
+
+		if ($user) {
+			// update
+			$user->username = $username;
+			$user->avatar   = $avatar;
+
+			$user->save();
+		}
+		else
+		{
+			// create
+			User::create(compact('id', 'avatar', 'username', 'location'));
 		}
 	}
 
@@ -139,7 +186,7 @@ class PullCommand extends Command {
 	protected function getArguments()
 	{
 		return array(
-			array('tag', InputArgument::REQUIRED, 'A tag to filter vines.'),
+			//
 		);
 	}
 
@@ -151,7 +198,7 @@ class PullCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			//array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
+			array('tag', null, InputOption::VALUE_OPTIONAL, 'A tag to filter vines.'),
 		);
 	}
 
