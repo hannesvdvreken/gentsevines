@@ -29,6 +29,7 @@ class APIController extends BaseController {
 
 		$set = Vine::whereIn('tag', $tags)
 		           ->where('posted_at', '<', $last_vine->posted_at)
+		           ->valid()
 		           ->orderBy('posted_at', 'desc')
 		           ->take(1)->get();
 

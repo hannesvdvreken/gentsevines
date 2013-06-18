@@ -9,4 +9,15 @@ class Vine extends Eloquent {
 	 */
 	protected $table = 'vines';
 	protected $guarded = array();
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | Valid
+	 |--------------------------------------------------------------------------
+	 */
+
+	public function scopeValid($query) {
+
+		$query->where('invalid', 0);
+	}
 }

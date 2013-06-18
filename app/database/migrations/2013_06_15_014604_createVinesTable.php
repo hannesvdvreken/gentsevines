@@ -25,6 +25,7 @@ class CreateVinesTable extends Migration {
 			$table->text('video');
 			$table->string('posted_at');
 			$table->string('tag');
+			$table->boolean('invalid')->default(false);
 		});
 	}
 

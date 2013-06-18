@@ -62,7 +62,7 @@ class AppController extends BaseController {
 		$tags = Config::get('vine.tags');
 
 		// get vines
-		$set = Vine::whereIn('tag', $tags)->orderBy('posted_at', 'desc')->take(5)->get();
+		$set = Vine::whereIn('tag', $tags)->valid()->orderBy('posted_at', 'desc')->take(5)->get();
 
 		$vines = array();
 
