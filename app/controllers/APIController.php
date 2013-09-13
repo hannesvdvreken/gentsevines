@@ -65,11 +65,11 @@ class APIController extends BaseController {
 
 		// get current vine data from vine.co
 		$v = new Vine();
-		$v->set_session($this->user->vine_session_id);
+		if (isset($this->user)) $v->set_session($this->user->vine_session_id);
 		$vine_data = $v->vine($vine_id);
 
 		$vine->likes = array(
-			'user_like' => $vine_data['liked'],
+			'user_like' => isset($this->user) ? $vine_data['liked'] : 0,
 			'count' => $vine_data['likes']['count'],
 		);
 
