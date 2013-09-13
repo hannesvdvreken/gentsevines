@@ -4,10 +4,11 @@
     "keywords": ["framework", "laravel"],
 	"require": {
 		"laravel/framework": "4.0.*",
-		"laravel/curl": "dev-master"
+		"guzzle/guzzle": "3.7.*@dev"
 	},
 	"autoload": {
 		"classmap": [
+			"app/classes",
 			"app/commands",
 			"app/controllers",
 			"app/models",

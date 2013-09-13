@@ -21,7 +21,9 @@
 				       value="{{ isset($username) ? $username : '' }}"/>
 				<input name="password" type="password" placeholder="wachtwoord"/>
 				<button class="button expand">aanmelden</button>
-				<a href="{{ URL::to('/terms') }}">Meer uitleg</a>
+				
+				<a href="{{ URL::to('/terms') }}">Meer uitleg</a>&nbsp;&nbsp;&nbsp;
+				<a href="{{ URL::to('/') }}">Annuleren</a>
 			</form>
 		</div>
 	</div>

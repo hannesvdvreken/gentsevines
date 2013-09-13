@@ -1,172 +1,167 @@
 <?php
 
+use Models\Vine as Vine_model;
+
 class APIController extends BaseController {
 
-	public function __construct () {
-		parent::__construct();
+	public function __construct () 
+	{
+		//parent::__construct();
+		$me = $this;
 
 		$this->beforeFilter(function()
-        {
-            if (!Session::has('user'))
-            {
-            	return Response::make('not authenticated', 401);
-            }
-        }, array('on' => 'post'));
+		{
+			if ( ! Session::has('user'))
+			{
+				return Response::make('not authenticated', 401);
+			}
+		}, array('on' => 'post|delete'));
 
+		$this->beforeFilter(function()
+		{
+			if (Session::has('user'))
+			{
+				$this->user = User::find(Session::get('user'));
+			}
+		});
 	}
 
-	/**
-	 *
-	 */
-	public function getLoad ($last_vine_id, $tags) {
-
+	public function getStream ($last_vine_id, $tags) 
+	{
+		// process input
 		$tags = explode('+', $tags);
+		$limit = Input::get('limit', 1);
 
-		$user = User::find(Session::get('user'));
-		$user_id = ($user) ? $user->id : null;
+		// get date
+		$last_vine = Vine_model::find($last_vine_id);
 
-		$last_vine = Vine::find($last_vine_id);
+		// get next vines
+		$set = Vine_model::where('posted_at', '<', $last_vine->posted_at)
+		                 ->whereIn('tag', $tags)
+		                 ->valid()
+		                 ->orderBy('posted_at', 'desc')
+		                 ->take($limit)->get();
 
-		$set = Vine::whereIn('tag', $tags)
-		           ->where('posted_at', '<', $last_vine->posted_at)
-		           ->valid()
-		           ->orderBy('posted_at', 'desc')
-		           ->take(1)->get();
-
-		foreach ($set as $v) {
-			// append like data
-			$v->likes = $this->likes($v, $user_id);
-
-			// append user data
-			$v->user = $this->user($v);
+		// pre-load users
+		foreach ($set as &$v) 
+		{
+			$v->user;
 		}
 
 		return Response::json($set);
 	}
 
-	/**
-	 *
-	 */
-	public function getVine ($vine_id, $type = null) {
+	public function getVine ($vine_id) 
+	{
+		if ($fault = $this->check_vine_id($vine_id))
+		{
+			return $fault;
+		}
 
+		$vine = Vine_model::find($vine_id);
+
+		// pre-load
+		$vine->user;
+
+		// get current vine data from vine.co
+		$v = new Vine();
+		$v->set_session($this->user->vine_session_id);
+		$vine_data = $v->vine($vine_id);
+
+		$vine->likes = array(
+			'user_like' => $vine_data['liked'],
+			'count' => $vine_data['likes']['count'],
+		);
+
+		return Response::json($vine);
+	}
+
+	public function postVine ($vine_id, $type) 
+	{
+		// checks
+		if ($fault = $this->check_type($type)) 
+		{
+			return $fault;
+		}
+
+		if ($fault = $this->check_vine_id($vine_id))
+		{
+			return $fault;
+		}
+
+		switch ($type)
+		{
+			case 'like':
+				return $this->like_vine($vine_id);
+				break;
+		}
+	}
+
+	public function deleteVine ($vine_id, $type) 
+	{
+		// checks
+		if ($fault = $this->check_type($type)) 
+		{
+			return $fault;
+		}
+
+		if ($fault = $this->check_vine_id($vine_id))
+		{
+			return $fault;
+		}
+
+		// 
+		switch ($type)
+		{
+			case 'like':
+				return $this->dislike_vine($vine_id);
+				break;
+		}
+	}
+
+	protected function like_vine($vine_id)
+	{
+		// load stuff
+		$v = new Vine();
+		$v->set_session($this->user->vine_session_id);
+
+		// perform like
+		// return success
+		return Response::json(
+			$v->like($vine_id)
+		);
+	}
+
+	protected function dislike_vine($vine_id)
+	{
+		// load stuff
+		$v = new Vine();
+		$v->set_session($this->user->vine_session_id);
+
+		// perform like deletion
+		// return success
+		return Response::json(
+			$v->dislike($vine_id)
+		);
+	}
+
+	protected function check_type($type)
+	{
+		if ( ! in_array($type, array('like'))) 
+		{
+			return Response::make('unsupported interaction', 404);
+		}
+	}
+
+	protected function check_vine_id($vine_id)
+	{
 		// check if we know about this vine
-		$vine = Vine::find($vine_id);
-		if (!$vine) {
+		$vine = Vine_model::find($vine_id);
+
+		// check vine
+		if (!$vine)
+		{
 			return Response::make('we never heard about this vine...', 404);
 		}
-
-		// check if user is logged in
-		$user = User::find(Session::get('user'));
-		$user_id = ($user) ? $user->id : null;
-
-		switch ($type) {
-			case 'likes':
-
-				return Response::json($this->likes($vine, $user_id));
-
-			case 'comments':
-
-				return Response::json($this->comments($vine));
-
-			default:
-				// append like data
-				$vine->likes = $this->likes($vine, $user_id);
-
-				// append user data
-				$vine->user = $this->user($vine);
-
-				return Response::json($vine);
-		}
 	}
-
-	public function postLike ($vine_id) {
-
-		return $this->toggleLike($vine_id, true);
-
-	}
-
-	public function postDislike ($vine_id) {
-
-		return $this->toggleLike($vine_id, false);
-	}
-
-	protected function toggleLike ($vine_id, $like = true) {
-		// POST or DELETE the like?
-		$method = $like ? 'POST': 'DELETE';
-
-		// check if we know about this vine
-		$vine = Vine::find($vine_id);
-		if (!$vine) {
-			return Response::make('we never heard about this vine...', 404);
-		}
-
-		// get user
-		$user = User::find(Session::get('user'));
-
-		// do request
-		$this->curl->create($this->base . "/posts/$vine_id/likes");
-		$this->curl->option(CURLOPT_HTTPHEADER, array("vine-session-id: {$user->vine_session_id}"));
-		$this->curl->option(CURLOPT_CUSTOMREQUEST, $method);
-		
-		$response = json_decode($this->curl->execute());
-
-		return Response::json($response);
-	}
-
-	protected function user ($vine) {
-		// append user data
-		$user = User::find($vine->user_id)->toArray();
-
-		// crucial:
-		unset($user['vine_session_id']);
-		unset($user['email']);
-
-		return $user;
-	}
-
-	protected function likes ($vine, $user_id = null) {
-		// add caching
-
-		$vine_session_id = Config::get('vine.vine-session-id');
-
-		// do request
-		$this->curl->create($this->base . "/posts/$vine->id/likes");
-		$this->curl->option(CURLOPT_HTTPHEADER, array("vine-session-id: $vine_session_id"));
-
-		// pull data
-		$response = json_decode($this->curl->execute());
-
-		// get count
-		$count = $response->data->count;
-
-		// get user
-
-		if (!$user_id) {
-
-			return compact('count');
-
-		} else {
-			$user_like = false;
-
-			foreach ($response->data->records as $like) {
-				if ($like->userId == $user_id)
-				{
-					$user_like = true;
-					break;
-				}
-			}
-
-			return compact('count', 'user_like');
-		}
-	}
-
-	protected function comments ($vine) {
-		// add caching
-
-		// pull data
-
-		// return
-		return array('test' => true);
-	}
-
 }

@@ -11,18 +11,21 @@ class LogoutController extends BaseController {
 		// get user
 		$user = User::find(Session::get('user'));
 
-		// do request
-		$this->curl->create($this->base . '/users/authenticate');
-		$this->curl->option(CURLOPT_HTTPHEADER, array("vine-session-id: $user->vine_session_id"));
-		$this->curl->option(CURLOPT_CUSTOMREQUEST, 'DELETE');
-		
-		$response = json_decode($this->curl->execute());
+		if ($user) {
+			// do request
+			$v = new Vine();
+			$v->set_session($user->vine_session_id);
+			$logged_out = $v->logout();
 
-		if (isset($response->success) && $response->success) {
-			// something went wrong
+			if ($logged_out)
+			{
+				Session::flush();
+			}
 		}
-
-		Session::flush();
+		else
+		{
+			Session::flush();
+		}
 
 		return Redirect::to('/');
 	}

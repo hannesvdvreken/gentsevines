@@ -14,11 +14,4 @@ class BaseController extends Controller {
 			$this->layout = View::make($this->layout);
 		}
 	}
-
-	public function __construct ()
-    {
-    	$this->curl = new Curl();
-    	$this->base = 'https://api.vineapp.com';
-    }
-
 }

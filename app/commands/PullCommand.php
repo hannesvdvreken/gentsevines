@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Models\Vine as Vine_model;
 
 class PullCommand extends Command {
 
@@ -21,145 +22,59 @@ class PullCommand extends Command {
 	protected $description = 'Pull vines with specific tags.';
 
 	/**
-	 * Create a new command instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		$this->curl = new Curl();
-		$this->base = Config::get('vine.base_url');
-	}
-
-	/**
 	 * Execute the console command.
 	 *
 	 * @return void
 	 */
 	public function fire()
 	{
-		// TODO get tag from arguments list
-		$tags = array();
-		$tag = $this->option('tag');
-
-		if ($tag) {
-			$tags[] = $tag;
-		}
-		else
-		{
-			$tags = Config::get('vine.tags');
-		}
-
-		foreach ($tags as $tag) {
-
-			$vines = $this->pull_vines($tag);
-		
-			foreach ($vines as $vine_data) {
-			
-				$this->save_vine($vine_data, $tag);
-		
-			}
-
-		}
-	}
-
-	function pull_vines ($tag) {
-
-		// get settings
-		$vine_session_id = Config::get('vine.vine-session-id');
-
 		// init
-		$this->curl->create($this->base . "/timelines/tags/$tag?size=10");
-		$this->curl->option(CURLOPT_HTTPHEADER, array("vine-session-id: $vine_session_id"));
+		$v = new Vine();
 
-		// do request
-		$response = json_decode($this->curl->execute());
+		// set tags array
+		$tag = $this->option('tag');
+		$tags = $tag ? array($tag) : Config::get('vine.tags');
 
-		// prepare array
-		$vines = array();
-
-		if (count($response->data->records) == 0 )
+		// loop
+		foreach ($tags as $tag) 
 		{
-			return $vines;
-		}
+			// get last id
+			$last_vine = Vine_model::last($tag)->first();
+			$last = empty($last_vine) ? null : $last_vine['id'];
 
-		// try existance
-		$id = $response->data->records[0]->postId;
-		$vine = Vine::where('id', $id)->where('tag', $tag)->first();
-
-		// repeat
-		$page   = $response->data->nextPage;
-		$anchor = $response->data->anchor;
-
-		foreach ($response->data->records as $record) {
-			// try existance
-			$id = $record->postId;
-			$vine = Vine::where('id', $id)->first();
-
-			if (!$vine) 
+			// pull newest vines with tag
+			$vines = $v->newest($tag, $last);
+			
+			foreach ($vines as $vine_data) 
 			{
-				$vines[] = $record;
+				$this->save_vine($vine_data, $tag);
 			}
 		}
-
-		while (!is_null($page)) {
-
-			// prep curl
-			$this->curl->create($this->base . "/timelines/tags/$tag?size=10&page=$page&anchor=$anchor");
-			$this->curl->option(CURLOPT_HTTPHEADER, array("vine-session-id: $vine_session_id"));
-
-			// exec
-			$response = json_decode($this->curl->execute());
-
-			// failsafe
-			if (count($response->data->records) < 1) {
-				$page = null;
-				break;
-			}
-
-			// repeat
-			$page   = $response->data->nextPage;
-			$anchor = $response->data->anchor;
-
-			foreach ($response->data->records as $record) {
-				// try existance
-				$id = $record->postId;
-				$vine = Vine::where('id', $id)->first();
-
-				if (!$vine) 
-				{
-					$vines[] = $record;
-				}
-			}
-		}
-
-		// return
-		return $vines;
 	}
 
-	function save_vine ($vine_data, $tag) {
+	function save_vine ($vine_data, $tag) 
+	{
+		// check if duplicate
+		$v = Vine_model::find($vine_data['postId']);
+		if ($v) return false;
 
 		// get required vine data
-		$id          = $vine_data->postId;
-		$venue       = $vine_data->foursquareVenueId;
-		$user_id     = $vine_data->user->userId;
-		$thumbnail   = $vine_data->thumbnailUrl;
-		$description = $vine_data->description;
-		$video       = $vine_data->videoUrl;
-		$posted_at   = $vine_data->created;
+		$id          = $vine_data['postId'];
+		$venue       = $vine_data['foursquareVenueId'];
+		$user_id     = $vine_data['userId'];
+		$thumbnail   = $vine_data['thumbnailUrl'];
+		$description = $vine_data['description'];
+		$video       = $vine_data['videoUrl'];
+		$posted_at   = $vine_data['created'];
 
 		// save vine
-		Vine::create(compact('id', 'venue', 'user_id', 'thumbnail', 'description', 'video', 'posted_at', 'tag'));
+		Vine_model::create(compact('id', 'venue', 'user_id', 'thumbnail', 'description', 'video', 'posted_at', 'tag'));
 
 		// get user data
-		$user_data = $vine_data->user;
-
-		$id       = $user_data->userId;
-		$username = $user_data->username;
-		$avatar   = $user_data->avatarUrl;
-		$location = isset($user_data->location) ? $user_data->location : null;
+		$id       = $vine_data['userId'];
+		$username = $vine_data['username'];
+		$avatar   = $vine_data['avatarUrl'];
+		$location = isset($vine_data['location']) ? $vine_data['location'] : null;
 
 		// don't duplicate
 		$user = User::find($id);

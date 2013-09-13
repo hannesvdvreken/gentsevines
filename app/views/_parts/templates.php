@@ -22,16 +22,23 @@
 				</ul>
 			</div>
 			<div class="likes">
-				{{^likes.user_like }}
-				<span class="btn"><i class="icon-heart"></i></span>
-				{{/likes.user_like }}
-				{{#likes.user_like }}
-				<i class="icon-heart liked"></i>
-				{{/likes.user_like }}
+				<span class="btn like-btn">
+					{{^likes.user_like }}
+						<i class="icon-heart"></i>
+					{{/likes.user_like }}
+					{{#likes.user_like }}
+						<i class="icon-heart liked"></i>
+					{{/likes.user_like }}
+				</span>
 				<span class="like-count">{{ likes.count }}</span> likes.
 			</div>
 			<div class="share">
-				<a href="https://twitter.com/intent/tweet?hashtags=gf13&original_referer=http%3A%2F%2Fgentsevines.be%2F&related=hannesvdvreken&text=%3C3%20Gent&url=http%3A%2F%2Fgentsevines.be%2F{{id}}"
+				<a href="https://twitter.com/intent/tweet?
+	hashtags={{ tag }}&
+	original_referer=http%3A%2F%2Fgentsevines.be%2F&
+	related=hannesvdvreken&
+	text=%3C3%20Gent&
+	url=http%3A%2F%2Fgentsevines.be%2F{{id}}"
 				   target="_blank"
 				>
 					<span class="btn"><i class="icon-twitter"></i></span>

@@ -89,8 +89,8 @@ function show_vine (vine_data) {
 	$('#vines-container').append(html);
 
 	// apply event listeners
-	$('.icon-heart').unbind('click'); // don't bind several times
-	$('.icon-heart').on('click', like);
+	$('.like-btn').unbind('click'); // don't bind several times
+	$('.like-btn').on('click', like);
 
 	$('video').unbind('click'); // don't bind several times
 	$('video').on('click', start_vine);
@@ -112,7 +112,7 @@ function load_vines (el) {
 	last_vine_id = $(last).attr('data-id');
 
 	// pull new
-	url = base_url + '/api/load/' + last_vine_id + '/' + tags.join('+');
+	url = base_url + '/api/stream/' + last_vine_id + '/' + tags.join('+');
 
 	$.get(url, function(data) {
 
@@ -170,7 +170,7 @@ function set_new_trigger() {
 
 	// variables
 	classname = 'trigger';
-	offset = 5;
+	offset = 3;
 
 	// delete all trigger elements
 	$('.trigger').each(function(){
@@ -201,25 +201,39 @@ function like(evt) {
 		return false;
 	}
 
+	// get right target
+	if ($(evt.target).hasClass('icon-heart'))
+	{
+		target = $(evt.target).parent();
+	}
+	else
+	{
+		target = $(evt.target);
+	}
+
+	// get some elements
+	icon = target.children().first();
+	count = target.next('.like-count');
+
 	// if already liked; do dislike
-	if ($(evt.target).hasClass('liked')) return dislike(evt);
+	if (icon.hasClass('liked')) return dislike(evt);
 
 	// get vine id out of dom
-	vine_id = '' + $(evt.target).closest('.vine-element').attr('data-id');
+	vine_id = '' + target.closest('.vine-element').attr('data-id');
 
 	// build url
-	url = base_url + '/api/like/' + vine_id;
+	url = base_url + '/api/vine/' + vine_id + '/like';
 
 	// make post
-	$.post(url, function(data) {
-
-		if (data.success) {
-
-			$(evt.target).addClass('liked');
+	$.post(url, function(data) 
+	{
+		if (data.success) 
+		{
+			icon.addClass('liked');
 
 			// update likes count
-			current = parseInt($(evt.target).next().html(), 10);
-			$(evt.target).next().html(current + 1);
+			current = parseInt(count.html(), 10);
+			count.html(current + 1);
 		}
 	});
 }
@@ -230,13 +244,31 @@ function dislike(evt) {
 	vine_id = '' + $(evt.target).closest('.vine-element').attr('data-id');
 
 	// build url
-	url = base_url + '/api/dislike/' + vine_id;
+	url = base_url + '/api/vine/' + vine_id + '/like';
 
-	$.post(url, function(data) {
+	$.ajax({
+		url: url,
+		type: 'DELETE',
+		success: function(data) 
+		{
+			if (data.success) 
+			{
+				if ($(evt.target).hasClass('icon-heart'))
+				{
+					icon = $(evt.target);
+				}
+				else
+				{
+					icon = $(evt.target).children().first();
+				}
 
-		if (data.success) {
+				icon.removeClass('liked');
 
-			$(evt.target).removeClass('liked');
+				// update likes count
+				count = icon.parent().next('.like-count');
+				current = parseInt(count.html(), 10);
+				count.html(current - 1);
+			}
 		}
 	});
 }

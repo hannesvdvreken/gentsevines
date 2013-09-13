@@ -2,12 +2,13 @@
 
 class LoginController extends BaseController {
 
-	public function __construct () {
-		parent::__construct();
+	public function __construct () 
+	{
+		//parent::__construct();
 
 		$this->beforeFilter(function()
         {
-            if (App::environment() == 'production' &&
+            if (//App::environment() == 'production' &&
             	Session::has('user')) 
             {
             	return Redirect::to('/');
@@ -27,51 +28,45 @@ class LoginController extends BaseController {
 		$username = Input::get('username');
 		$password = Input::get('password');
 
-		// do request
-		$response = json_decode(
-			$this->curl->simple_post(
-				$this->base . '/users/authenticate',
-				compact('username', 'password')
-			)
-		);
+		$v = new Vine();
+		$keys = $v->login($username, $password);
 
-		if (isset($response->success) && $response->success) {
-			// get data
-			$id              = $response->data->userId;
-			$vine_session_id = $response->data->key;
+		if ($keys)
+		{
+			// get user data
+			$v->set_session($keys['key']);
+			$user = $v->user($keys['userId']);
+			
+			// parse info
+			$vine_session_id = $keys['key'];
+			$id        = $keys['userId'];
 
-			// reset curl
-			$this->curl->create($this->base . '/users/me');
-			$this->curl->option(CURLOPT_HTTPHEADER, array("vine-session-id: $vine_session_id"));
-			
-			// get user
-			$user_data = json_decode($this->curl->execute());
-			$user_data = $user_data->data;
-			
-			// session
-			Session::put('user', $id);
+			$email     = $user['email'];
+			$followers = $user['followerCount'];
+			$avatar    = $user['avatarUrl'];
+			$username  = $user['username'];
+			$twitter   = $user['twitterId'];
 
 			// db
-			$user = User::find($id);
+			$db_user = User::find($id);
 
-			if ($user) {
-				$user->vine_session_id = $vine_session_id;
-				$user->email     = $user_data->email;
-				$user->followers = $user_data->followerCount;
-				$user->avatar    = $user_data->avatarUrl;
-				$user->username  = $user_data->username;
-				$user->twitter   = $user_data->twitterId;
-				$user->save();
-			} else {
-				$email     = $user_data->email;
-				$followers = $user_data->followerCount;
-				$avatar    = $user_data->avatarUrl;
-				$username  = $user_data->username;
-				$twitter   = $user_data->twitterId;
-
+			if ($db_user) {
+				$db_user->vine_session_id = $vine_session_id;
+				$db_user->email     = $email;
+				$db_user->followers = $followers;
+				$db_user->avatar    = $avatar;
+				$db_user->username  = $username;
+				$db_user->twitter   = $twitter;
+				$db_user->save();
+			} 
+			else
+			{
 				$user = User::create(compact('id', 'vine_session_id', 'email', 'followers', 
 					                         'avatar', 'username', 'twitter'));
 			}
+
+			// session
+			Session::put('user', $id);
 		}
 		else
 		{
